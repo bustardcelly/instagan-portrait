@@ -68,7 +68,7 @@ def build_discriminator(image_shape):
 def build_generator(noise_size, channels):
     model = Sequential()
     model.add(Dense(4 * 4 * 256, activation="relu", input_dim=noise_size))
-    model.add(Reshape((4 * 4 * 256)))
+    model.add(Reshape((4, 4, 256)))
 
     model.add(UpSampling2D())
     model.add(Conv2D(256, kernel_size=3, padding="same"))
@@ -87,7 +87,7 @@ def build_generator(noise_size, channels):
         model.add(Activation("relu"))
 
     model.summary()
-    model.add(Conv2D(channels, kernal_size=3, padding="same"))
+    model.add(Conv2D(channels, kernel_size=3, padding="same"))
     model.add(Activation("relu"))
 
     input = Input(shape=(noise_size))
@@ -159,6 +159,8 @@ for epoch in range(EPOCHS):
     discriminator_metric = 0.5 * np.add(discriminator_metric_real, discriminator_metric_generated)
 
     generator_metric = combined.train_on_batch(noise, y_real)
+
+    print(f"epoch({epoch}), cnt({cnt}), idx({idx})")
 
     if epoch % SAVE_FREQ == 0:
         save_images(cnt, fixed_noise)
