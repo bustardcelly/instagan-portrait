@@ -7,28 +7,29 @@ from keras.layers import Input, Reshape, Dropout, Dense, Flatten, BatchNormaliza
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
-from kera.optimizers import Adam
+from keras.optimizers import Adam
 
 # Preview Image Frame
 PREVIEW_ROWS = 4
 PREVIEW_COLS = 7
-PREVIW_MARGIN = 4
+PREVIEW_MARGIN = 4
 SAVE_FREQ = 100
 
 # Size vectore to generate images from
 NOISE_SIZE = 100
 
-EPOCHS = 10000 # number of iterations
-BATCH_SIZE = 32 # 25?
+EPOCHS = 10000  # number of iterations
+BATCH_SIZE = 32  # 25?
 
 GENERATE_RES = 3
-IMAGE_SIZE = 128 # rows/cols
+IMAGE_SIZE = 128  # rows/cols
 
 IMAGE_CHANNELS = 3
 
 training_data = np.load('insta_data.npy')
 
-def build_descriminator(image_shape):
+
+def build_discriminator(image_shape):
 
     model = Sequential()
 
@@ -37,7 +38,7 @@ def build_descriminator(image_shape):
     model.add(Dropout(0.25))
 
     model.add(Conv2D(64, kernel_size=3, strides=2, input_shape=image_shape, padding="same"))
-    model.add(ZeroPadding2D(padding=((0,1), (0,1))))
+    model.add(ZeroPadding2D(padding=((0, 1), (0, 1))))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
@@ -62,6 +63,7 @@ def build_descriminator(image_shape):
     input_image = Input(shape=image_shape)
     validity = model(input_image)
     return Model(input_image, validity)
+
 
 def build_generator(noise_size, channels):
     model = Sequential()
@@ -93,6 +95,7 @@ def build_generator(noise_size, channels):
 
     return Model(input, generated_image)
 
+
 def save_images(cnt, noise):
     image_row = (PREVIEW_MARGIN + (PREVIEW_ROWS * (IMAGE_SIZE + PREVIEW_MARGIN)))
     image_col = (PREVIEW_MARGIN + (PREVIEW_COLS * (IMAGE_SIZE + PREVIEW_MARGIN)))
@@ -116,6 +119,7 @@ def save_images(cnt, noise):
     filename = os.path.join(output_path, f"trained-{cnt}.png")
     im = Image.fromarray(image_array)
     im.save(filename)
+
 
 image_shape = (IMAGE_SIZE, IMAGE_SIZE, IMAGE_CHANNELS)
 
@@ -150,9 +154,9 @@ for epoch in range(EPOCHS):
     x_fake = generator.predict(noise)
 
     discriminator_metric_real = discriminator.train_on_batch(x_real, y_real)
-    discrinimator_metric_generated = discriminator.train_on_batch(x_fake, y_fake)
+    discriminator_metric_generated = discriminator.train_on_batch(x_fake, y_fake)
 
-    discriminitor_metric = 0.5 * np.add(discriminator_metric_real, discriminator_metric_generated)
+    discriminator_metric = 0.5 * np.add(discriminator_metric_real, discriminator_metric_generated)
 
     generator_metric = combined.train_on_batch(noise, y_real)
 
@@ -160,4 +164,3 @@ for epoch in range(EPOCHS):
         save_images(cnt, fixed_noise)
         cnt += 1
         print(f"{epoch} epoch, Discriminator accuracy: {100*discriminator_metric[1]}, Generator accuracy: {100*generator_metric[1]}")
-
