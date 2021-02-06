@@ -4,7 +4,7 @@ from PIL import Image
 
 from tensorflow import keras
 from keras.layers import Input, Reshape, Dropout, Dense, Flatten
-BathcNormalization, Activation, ZeroPadding2D
+BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolution import UpSampling2D, Conv2D
 from keras.models import Sequential, Model, load_model
