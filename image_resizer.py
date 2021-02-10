@@ -13,7 +13,7 @@ IMAGE_CHANNELS = 3
 IMAGE_DIR = 'dataset/'
 
 # Defining image dir path. Change this if you have different directory
-images_path = IMAGE_DIR 
+images_path = IMAGE_DIR
 
 training_data = []
 
@@ -26,6 +26,7 @@ for filename in os.listdir(images_path):
         continue
     path = os.path.join(images_path, filename)
     image = Image.open(path).resize((IMAGE_SIZE, IMAGE_SIZE), Image.ANTIALIAS)
+    # image.save("out_" + filename)
 
     training_data.append(np.asarray(image))
 

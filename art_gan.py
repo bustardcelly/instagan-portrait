@@ -18,7 +18,7 @@ SAVE_FREQ = 100
 NOISE_SIZE = 100
 
 EPOCHS = 10000  # number of iterations
-BATCH_SIZE = 32  # 25?
+BATCH_SIZE = 25  # 25?
 
 GENERATE_RES = 3
 IMAGE_SIZE = 128  # rows/cols
@@ -36,23 +36,23 @@ def build_discriminator(image_shape):
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(64, kernel_size=3, strides=2, input_shape=image_shape, padding="same"))
+    model.add(Conv2D(64, kernel_size=3, strides=2, padding="same"))
     model.add(ZeroPadding2D(padding=((0, 1), (0, 1))))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(128, kernel_size=3, strides=2, input_shape=image_shape, padding="same"))
+    model.add(Conv2D(128, kernel_size=3, strides=2, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(256, kernel_size=3, strides=1, input_shape=image_shape, padding="same"))
+    model.add(Conv2D(256, kernel_size=3, strides=1, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
 
-    model.add(Conv2D(512, kernel_size=3, strides=1, input_shape=image_shape, padding="same"))
+    model.add(Conv2D(512, kernel_size=3, strides=1, padding="same"))
     model.add(BatchNormalization(momentum=0.8))
     model.add(LeakyReLU(alpha=0.2))
     model.add(Dropout(0.25))
@@ -87,7 +87,7 @@ def build_generator(noise_size, channels):
 
     model.summary()
     model.add(Conv2D(channels, kernel_size=3, padding="same"))
-    model.add(Activation("relu"))
+    model.add(Activation("tanh"))
 
     input = Input(shape=(noise_size))
     generated_image = model(input)
@@ -159,9 +159,10 @@ for epoch in range(EPOCHS):
 
     generator_metric = combined.train_on_batch(noise, y_real)
 
-    print(f"epoch({epoch}), cnt({cnt}), idx({idx})")
+    # print(f"epoch({epoch}), cnt({cnt}), idx({idx})")
 
     if epoch % SAVE_FREQ == 0:
         save_images(cnt, fixed_noise)
         cnt += 1
         print(f"{epoch} epoch, Discriminator accuracy: {100*discriminator_metric[1]}, Generator accuracy: {100*generator_metric[1]}")
+
