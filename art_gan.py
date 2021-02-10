@@ -2,7 +2,6 @@ import os
 import numpy as np
 from PIL import Image
 
-from tensorflow import keras
 from keras.layers import Input, Reshape, Dropout, Dense, Flatten, BatchNormalization, Activation, ZeroPadding2D
 from keras.layers.advanced_activations import LeakyReLU
 from keras.layers.convolutional import UpSampling2D, Conv2D
