@@ -24,7 +24,8 @@ idna==2.10
 image==1.5.33
 ipaddress==1.0.23
 Jinja2==2.11.3
-Keras==2.4.3
+Keras==2.3.1
+Keras-Applications==1.0.8
 Keras-Preprocessing==1.1.2
 log-symbols==0.0.14
 Markdown==3.3.3
